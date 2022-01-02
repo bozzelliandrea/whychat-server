@@ -1,0 +1,9 @@
+version: "3.3"
+services:
+  chat-backend:
+    ports:
+      - 8080:8080
+    build:
+      context: .
+      dockerfile: chat.Dockerfile
+    container_name: 'chat-backend-container'
