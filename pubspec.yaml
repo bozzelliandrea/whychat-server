@@ -1,7 +1,6 @@
-name: chat_app_server
+name: whychat
 description: A server app using the shelf package and Docker.
 version: 1.0.0
-# homepage: https://www.example.com
 
 environment:
   sdk: '>=2.15.1 <3.0.0'
@@ -11,6 +10,10 @@ dependencies:
   args: ^2.0.0
   shelf: ^1.1.0
   shelf_router: ^1.0.0
+  dotenv:
+  dart_jsonwebtoken: ^2.3.2
+  mongo_dart: ^0.7.2
+  redis: ^2.0.0
 
 dev_dependencies:
   http: ^0.13.0

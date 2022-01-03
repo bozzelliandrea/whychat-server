@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  portainer:
+    image: portainer/portainer-ce
+    networks:
+      - local
+    ports:
+      - "9000:9000"
+    volumes:
+      - portainer_data:/data
+    # admin/pass
+    command: --admin-password '$$2y$$05$$nzl.lKin9bK7MjxynV4xa.DfyTvOxuMyuvr0tJYPp5F/9EoamcMR.'
+
+networks:
+  local:
+    driver: bridge
+
+volumes:
+  portainer_data:

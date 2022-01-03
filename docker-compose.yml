@@ -1,0 +1,22 @@
+version: "2"
+services:
+  chat-backend:
+    ports:
+      - 8080:8080
+    build:
+      context: .
+      dockerfile: chat.Dockerfile
+    container_name: 'chat-backend-container'
+    networks:
+      - chat
+  mongo:
+    extends:
+      file: mongo-compose.yml
+      service: mongodb
+  redis:
+    extends:
+      file: redis-compose.yml
+      service: redis_cache
+networks:
+  chat:
+    driver: "bridge"
