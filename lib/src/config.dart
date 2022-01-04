@@ -10,7 +10,7 @@ abstract class Config {
   static String get mongoURI => env['MONGO_URI']!;
   // redis config
   static String get redisHost => env['REDIS_HOST']!;
-  static int get redisPort => int.tryParse(env['PORT'] ?? "6666")!;
+  static int get redisPort => int.tryParse(env['REDIS_PORT'] ?? "6666")!;
 
   static init() async {
     return load('.env.chat');

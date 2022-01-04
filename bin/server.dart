@@ -32,5 +32,5 @@ void main(List<String> args) async {
       .addHandler(app);
 
   await serve(handler, Config.url, Config.port);
-  print('WhyChat: Server ready and listening on ${Config.baseUrl}');
+  print('WhyChat: Server ready and listening on ${Config.baseUrl}:${Config.port}');
 }
