@@ -1,4 +1,5 @@
 .dockerignore
+*.Dockerfile
 Dockerfile
 build/
 .dart_tool/
@@ -6,4 +7,7 @@ build/
 .github/
 .gitignore
 .idea/
+.vsc/
 .packages
+*-compose.yml
+*.md

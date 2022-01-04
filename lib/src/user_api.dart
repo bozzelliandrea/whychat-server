@@ -4,6 +4,7 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import './utils.dart';
+import 'models.dart';
 
 class UserApi {
   DbCollection store;
@@ -18,9 +19,10 @@ class UserApi {
       final user = await store.findOne(
           where.eq('_id', ObjectId.fromHexString(authDetails.subject!)));
 
-      return Response.ok('{ "email": "${user!['email']}" }', headers: {
-        'content-type': 'application/json',
-      });
+      return Response.ok(User(user!['name'], user['email']!).toJson(),
+          headers: {
+            'content-type': 'application/json',
+          });
     });
 
     final handler =

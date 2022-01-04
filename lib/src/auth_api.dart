@@ -5,6 +5,8 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
+import 'package:whychat/src/models.dart';
+import 'package:whychat/whychat.dart';
 
 import 'token_service.dart';
 import 'utils.dart';
@@ -21,30 +23,31 @@ class AuthApi {
 
     router.post('/register', (Request req) async {
       final payload = await req.readAsString();
-      final userInfo = json.decode(payload);
-      final email = userInfo['email'];
-      final password = userInfo['password'];
+      final authJSON = json.decode(payload);
+      final Auth authRequest = Auth.fromJson(authJSON);
 
       // Ensure email and password fields are present
-      if (email == null ||
-          email.isEmpty ||
-          password == null ||
-          password.isEmpty) {
+      if (authRequest.email == null ||
+          authRequest.email.isEmpty ||
+          authRequest.password == null ||
+          authRequest.password.isEmpty ||
+          authRequest.name == null || authRequest.name.isEmpty) {
         return Response(HttpStatus.badRequest,
             body: 'Please provide your email and password');
       }
 
       // Ensure user is unique
-      final user = await store.findOne(where.eq('email', email));
+      final user = await store.findOne(where.eq('email', authRequest.email));
       if (user != null) {
         return Response(HttpStatus.badRequest, body: 'User already exists');
       }
 
       // Create user
       final salt = generateSalt();
-      final hashedPassword = hashPassword(password, salt);
+      final hashedPassword = hashPassword(authRequest.password, salt);
       await store.insertOne({
-        'email': email,
+        'email': authRequest.email,
+        'name': authRequest.name,
         'password': hashedPassword,
         'salt': salt,
       });
@@ -54,25 +57,24 @@ class AuthApi {
 
     router.post('/login', (Request req) async {
       final payload = await req.readAsString();
-      final userInfo = json.decode(payload);
-      final email = userInfo['email'];
-      final password = userInfo['password'];
+      final authJSON = json.decode(payload);
+      final Auth authRequest = Auth.fromJson(authJSON);
 
       // Ensure email and password fields are present
-      if (email == null ||
-          email.isEmpty ||
-          password == null ||
-          password.isEmpty) {
+      if (authRequest.email == null ||
+          authRequest.email.isEmpty ||
+          authRequest.password == null ||
+          authRequest.password.isEmpty) {
         return Response(HttpStatus.badRequest,
             body: 'Please provide your email and password');
       }
 
-      final user = await store.findOne(where.eq('email', email));
+      final user = await store.findOne(where.eq('email', authRequest.email));
       if (user == null) {
         return Response.forbidden('Incorrect user and/or password');
       }
 
-      final hashedPassword = hashPassword(password, user['salt']);
+      final hashedPassword = hashPassword(authRequest.password, user['salt']);
       if (hashedPassword != user['password']) {
         return Response.forbidden('Incorrect user and/or password');
       }
