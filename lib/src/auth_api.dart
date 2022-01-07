@@ -31,7 +31,7 @@ class AuthApi {
           authRequest.email.isEmpty ||
           authRequest.password == null ||
           authRequest.password.isEmpty ||
-          authRequest.name == null || authRequest.name.isEmpty) {
+          authRequest.name == null || authRequest.name!.isEmpty) {
         return Response(HttpStatus.badRequest,
             body: 'Please provide your email and password');
       }
